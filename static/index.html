@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f6f7f5">
+  <title>The Judge — Research desk</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand"><div class="brand-mark">J</div><div><b>The Judge</b><span>THESIS RESEARCH</span></div></div>
+      <button class="new-button" id="new-chat"><span>＋</span> New thesis</button>
+      <div class="side-label">YOUR RESEARCH</div>
+      <nav id="conversation-list" class="conversation-list"></nav>
+      <div class="sidebar-bottom"><div class="connection"><i></i> Local workspace</div><button class="settings-link" id="open-settings"><span>⚙</span> Agent settings</button></div>
+    </aside>
+    <main class="main">
+      <header class="topbar"><div class="breadcrumbs"><span>Research desk</span><span class="slash">/</span><b id="crumb-title">New thesis</b></div><div class="top-actions"><div class="round-cap" id="round-cap">ROUND CAP <b>3</b></div><button class="icon-button" id="settings-icon" aria-label="Settings">⚙</button><div class="avatar">H</div></div></header>
+      <section id="welcome" class="welcome">
+        <div class="welcome-kicker"><i></i> EVIDENCE BEFORE CONVICTION</div>
+        <h1>Put a thesis<br>on the stand.</h1>
+        <p>Two researchers argue both sides. Jev weighs the evidence.<br>You stay in control of every round.</p>
+        <form id="thesis-form" class="composer welcome-composer">
+          <textarea id="thesis-input" rows="2" placeholder="What do you want to investigate?" required></textarea>
+          <div class="composer-footer"><span>Enter a clear, falsifiable investment thesis</span><button class="send-button" type="submit">Start research <span>↗</span></button></div>
+        </form>
+        <div class="starter-prompt"><span>TRY A THESIS</span><button type="button" class="suggestion">“Company X will double revenue in 3 years.” <span>↗</span></button></div>
+        <div class="pipeline"><div><span class="step-number">01</span><span class="step-icon green">↗</span><b>Make the case</b><small>Pro researcher finds support</small></div><span class="pipeline-line"></span><div><span class="step-number">02</span><span class="step-icon rust">⌁</span><b>Break the case</b><small>Opposition looks for cracks</small></div><span class="pipeline-line"></span><div><span class="step-number">03</span><span class="step-icon ink">◎</span><b>Weigh the evidence</b><small>Jev returns a probability</small></div></div>
+      </section>
+      <section id="workspace" class="workspace hidden">
+        <div class="thread-heading"><div><div class="eyebrow">INVESTMENT THESIS</div><h1 id="thread-thesis"></h1></div><span id="thread-status" class="status-pill">READY</span></div>
+        <div id="rounds" class="rounds"></div>
+        <div id="empty-round" class="empty-round"><div class="empty-orbit"><span>J</span></div><b>The thesis is on the stand.</b><span>Run a research round to gather evidence from both sides.</span></div>
+        <div id="activity" class="activity hidden"><span class="spinner"></span><div><b id="activity-title">Research in progress</b><span id="activity-copy">The researchers are gathering evidence.</span></div></div>
+        <div id="error-banner" class="error-banner hidden"></div>
+        <div class="control-dock">
+          <div class="source-entry"><span class="link-icon">↗</span><input id="source-input" type="url" placeholder="Add a source URL for the next round…"><button id="add-source" aria-label="Add source">Add source <span>＋</span></button></div>
+          <div class="dock-footer"><div id="source-list" class="source-list"></div><div class="round-controls"><span id="round-count">0 / 3 rounds</span><button id="run-round" class="run-button">Run next round <span>→</span></button></div></div>
+          <div id="round-guidance" style="font-size:10px;color:#89918a;margin-top:9px">Rounds auto-run until Jev reaches the confidence target or the round cap.</div>
+        </div>
+      </section>
+      <footer class="disclaimer">Research probabilities are model judgments, not guarantees or investment advice.</footer>
+    </main>
+  </div>
+  <dialog id="settings-dialog" class="settings-dialog">
+    <form id="settings-form" method="dialog">
+      <div class="dialog-head"><div><div class="eyebrow">TUNE THE HARNESS</div><h2>Agent settings</h2></div><button type="button" class="close-button" id="close-settings">×</button></div>
+      <p class="dialog-intro">Adjust each role’s instructions, when research stops, and the maximum number of rounds.</p>
+      <label>Pro researcher prompt<textarea name="pro_prompt" rows="3"></textarea></label>
+      <label>Opposition researcher prompt<textarea name="con_prompt" rows="3"></textarea></label>
+      <label>Jev evaluation guidance<textarea name="judge_prompt" rows="2"></textarea></label>
+      <label>Neutral yes / no question<textarea name="judge_question" rows="2"></textarea></label>
+      <label class="max-rounds-label">Maximum rounds <input type="number" name="max_rounds" min="1" max="10"></label>
+      <label class="max-rounds-label">Jev confidence stop (%) <input type="number" name="stop_confidence_percent" min="51" max="99"></label>
+      <small style="display:block;color:#858c86;font-size:10px;line-height:1.5;margin-top:-7px">Automatically stop when Jev is at least this confident that the thesis is true or false.</small>
+      <div class="dialog-actions"><span id="settings-saved"></span><button class="save-button" type="submit">Save settings</button></div>
+    </form>
+  </dialog>
+  <div id="toast" class="toast"></div>
+  <script src="/static/app.js"></script>
+</body>
+</html>

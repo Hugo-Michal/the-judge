@@ -1,0 +1,35 @@
+services:
+  search:
+    build: .
+    command: ["uvicorn", "search_server:app", "--host", "0.0.0.0", "--port", "8000"]
+    ports:
+      - "127.0.0.1:8016:8000"
+    environment:
+      TAVILY_API_KEY: ${TAVILY_API_KEY:-}
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health', timeout=5)"]
+      interval: 15s
+      timeout: 6s
+      retries: 5
+      start_period: 10s
+
+  judge:
+    build: .
+    ports:
+      - "127.0.0.1:8088:8000"
+    env_file:
+      - .env
+    environment:
+      DATA_DIR: /app/data
+      MCP_SEARCH_URL: http://search:8000/mcp
+      MCP_FETCH_URL: http://search:8000/mcp
+    volumes:
+      - judge-data:/app/data
+    depends_on:
+      search:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  judge-data:
