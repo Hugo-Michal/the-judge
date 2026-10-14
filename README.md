@@ -6,6 +6,32 @@ The pro researcher gathers evidence in favor of a thesis. The opposition researc
 
 The project is primarily an experimental environment for observing iterative AI-agent interaction and exploring whether new arguments, corrections, or patterns emerge through opposition and review. It can also be used to compare investment theses, but the scores are model estimates, not financial advice or proof of truth.
 
+## Harness overview
+
+```mermaid
+flowchart TD
+    U[User submits a thesis and optional source URLs] --> O[The Judge web app and round orchestrator]
+    O --> P[Pro researcher - DeepSeek]
+    O --> C[Opposition researcher - DeepSeek]
+    P <-->|search and fetch evidence| M[Built-in Search MCP server]
+    C <-->|search and fetch evidence| M
+    M --> T[Tavily search and extraction]
+    M -. fallback .-> E[Exa hosted MCP search]
+    P --> R[Reports, sources, and prior-round context]
+    C --> R
+    R --> J[Jev judge - TypeSafe]
+    J --> D{Confidence threshold met or max rounds reached?}
+    D -- No --> O
+    D -- Yes --> V[Show verdict and research timeline]
+    U -. supplied source .-> M
+```
+
+The diagram shows the normal research flow. The conversation view keeps the reports, evidence links, and Jev verdicts together by round.
+
+![The Judge interface showing a Cerebras thesis and Jev verdicts across research rounds](docs/images/research-session.png)
+
+*Example research session in The Judge.*
+
 ## What a research run does
 
 1. You enter a thesis or question in the browser.
@@ -17,10 +43,11 @@ The project is primarily an experimental environment for observing iterative AI-
 ## Requirements
 
 - Docker Desktop with Docker Compose
+- The built-in Search MCP server, which Docker Compose starts automatically; no separate MCP server installation is required
 - Internet access
 - A DeepSeek API key for the researcher agents
 - A TypeSafe API key for Jev
-- A Tavily API key is optional. Search can use keyless Tavily access with rate limits and falls back to Exa's hosted MCP search service.
+- A Tavily API key is optional. Search can use keyless Tavily access with rate limits and falls back to Exa's hosted MCP search service, so internet access to those providers is required.
 - A modern web browser
 
 ## Quick start
@@ -65,7 +92,7 @@ Conversation history is stored locally in the `judge-data` Docker volume. The ap
 - **Web app and orchestration:** FastAPI, with a lightweight browser interface
 - **Research agents:** DeepSeek
 - **Judge:** Jev through TypeSafe
-- **Search:** the app's own Streamable HTTP MCP server, using Tavily with an Exa hosted MCP fallback
+- **Search:** the app's own Streamable HTTP MCP server, using Tavily with an Exa hosted MCP fallback; it is included in Docker Compose
 - **Storage:** SQLite in a Docker-managed local volume
 
 ## Limitations
